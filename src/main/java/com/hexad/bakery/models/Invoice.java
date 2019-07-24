@@ -52,4 +52,9 @@ public class Invoice {
     private double roundOff(double value, int decimalPlaces) {
         return new BigDecimal(value).setScale(decimalPlaces, RoundingMode.UP).doubleValue();
     }
+
+
+    public Map<Pack, Integer> getPacksForOrder(Order order) {
+        return items.get(order);
+    }
 }

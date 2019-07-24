@@ -17,7 +17,7 @@ import java.util.List;
 public class ApplicationLauncher {
 
     private static BakeryService bakeryService;
-    private static final int DEFAULT_QUANTITY = 15;
+    private static final int DEFAULT_QUANTITY = 30;
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     public static void main(String[] args) throws IOException {

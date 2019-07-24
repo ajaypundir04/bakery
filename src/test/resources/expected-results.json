@@ -1,0 +1,43 @@
+[
+  {
+    "code": "VS5",
+    "packs": [
+      {
+        "pack": 5,
+        "count": 1
+      },
+      {
+        "pack": 3,
+        "count": 2
+      }
+    ]
+  },
+  {
+    "code": "MB11",
+    "packs": [
+      {
+        "pack": 8,
+        "count": 1
+      },
+      {
+        "pack": 2,
+        "count": 3
+      }
+    ]
+  },
+  {
+    "code": "CF",
+    "packs": [
+      {
+        "pack": 9,
+        "count": 2
+      },
+      {
+        "pack": 3,
+        "count": 2
+      }
+    ]
+  }
+
+
+]
