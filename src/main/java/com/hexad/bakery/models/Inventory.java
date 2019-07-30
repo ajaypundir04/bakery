@@ -1,33 +1,23 @@
 package com.hexad.bakery.models;
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Inventory {
 
-    private Product product;
-
-    private int availableQuantities;
+    private Map<Product, Integer> inventoryMap;
 
     public Inventory() {
+        inventoryMap = new HashMap<>();
     }
 
-    public Inventory(Product product, int availableQuantities) {
-        this.product = product;
-        this.availableQuantities = availableQuantities;
+    public Map<Product, Integer> getInventoryMap() {
+        return inventoryMap;
     }
 
-    public Product getProduct() {
-        return product;
+    public void setInventoryMap(Map<Product, Integer> inventoryMap) {
+        this.inventoryMap = inventoryMap;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public int getAvailableQuantities() {
-        return availableQuantities;
-    }
-
-    public void setAvailableQuantities(int availableQuantities) {
-        this.availableQuantities = availableQuantities;
-    }
 }

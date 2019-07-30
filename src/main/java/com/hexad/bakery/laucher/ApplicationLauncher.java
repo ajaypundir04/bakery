@@ -1,54 +1,43 @@
 package com.hexad.bakery.laucher;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hexad.bakery.constants.ApplicationConstant;
+import com.hexad.bakery.util.FileReader;
 import com.hexad.bakery.models.Invoice;
 import com.hexad.bakery.models.Order;
 import com.hexad.bakery.models.Product;
-import com.hexad.bakery.service.BakeryService;
-import com.hexad.bakery.service.InventoryService;
-import com.hexad.bakery.service.ProductService;
+import com.hexad.bakery.service.impl.BakeryServiceImpl;
+import com.hexad.bakery.service.impl.InventoryService;
+import com.hexad.bakery.service.impl.ProductServiceImpl;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 
-
+/**
+ * @author Ajay Singh Pundir
+ * Intial Point of Application
+ */
 public class ApplicationLauncher {
 
-    private static BakeryService bakeryService;
-    private static final int DEFAULT_QUANTITY = 30;
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static BakeryServiceImpl bakeryService;
 
     public static void main(String[] args) throws IOException {
         bakeryService = initialize();
-
-        List<Order> orders = readOrders();
-
+        List<Order> orders = FileReader.loadOrder("orders.json", ApplicationConstant.JSON_EXTENSION);
         Invoice invoice = bakeryService.processOrder(orders);
         invoice.prettyPrint();
     }
 
-    private static BakeryService initialize() throws IOException {
-        Product[] products = loadData();
+    private static BakeryServiceImpl initialize() throws IOException {
+        Product [] products = FileReader.loadProduct("products.json", ApplicationConstant.JSON_EXTENSION);
         InventoryService inventoryService = new InventoryService();
         for (Product p : products) {
-            inventoryService.addOrUpdateInventory(p, DEFAULT_QUANTITY);
+            inventoryService.addOrUpdateInventory(p, ApplicationConstant.DEFAULT_QUANTITY);
         }
-        ProductService productService = new ProductService(inventoryService);
-        return new BakeryService(inventoryService, productService);
+        ProductServiceImpl productServiceImpl = new ProductServiceImpl(inventoryService);
+        BakeryServiceImpl bakeryService = BakeryServiceImpl.getInstance();
+        bakeryService.setInventoryService(inventoryService);
+        bakeryService.setProductServiceImpl(productServiceImpl);
+        return bakeryService;
     }
 
-    private static Product[] loadData() throws IOException {
-        return MAPPER.readValue(resourceFileAsUrl("data.json"), Product[].class);
-    }
-
-    private static List<Order> readOrders() throws IOException {
-        return MAPPER.readValue(resourceFileAsUrl("orders.json"), new TypeReference<List<Order>>() {
-        });
-    }
-
-    private static URL resourceFileAsUrl(String file) {
-        return ApplicationLauncher.class.getClassLoader().getResource(file);
-    }
 }

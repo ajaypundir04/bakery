@@ -5,19 +5,23 @@ import com.hexad.bakery.models.Invoice;
 import com.hexad.bakery.models.Order;
 import com.hexad.bakery.models.Pack;
 import com.hexad.bakery.models.Product;
-import com.hexad.bakery.utils.*;
+import com.hexad.bakery.service.impl.BakeryServiceImpl;
+import com.hexad.bakery.service.impl.InventoryService;
+import com.hexad.bakery.service.impl.ProductServiceImpl;
+import com.hexad.bakery.utils.TestUtils;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 
 public class BakeryServiceTest {
 
-    private BakeryService bakeryService;
+    private BakeryServiceImpl bakeryService = BakeryServiceImpl.getInstance();
 
     @Before
     public void setup() throws Exception {
@@ -26,8 +30,7 @@ public class BakeryServiceTest {
         Product[] products = TestUtils.readJsonFile("test-data.json", Product[].class);
         Arrays.stream(products).forEach(p -> inventoryService.addOrUpdateInventory(p, 30));
 
-        ProductService productService = new ProductService(inventoryService);
-        bakeryService = new BakeryService(inventoryService, productService);
+        ProductServiceImpl productServiceImpl = new ProductServiceImpl(inventoryService);
     }
 
     @Test
