@@ -31,6 +31,8 @@ public class BakeryServiceTest {
         Arrays.stream(products).forEach(p -> inventoryService.addOrUpdateInventory(p, 30));
 
         ProductServiceImpl productServiceImpl = new ProductServiceImpl(inventoryService);
+        bakeryService.setInventoryService(inventoryService);
+        bakeryService.setProductServiceImpl(productServiceImpl);
     }
 
     @Test
