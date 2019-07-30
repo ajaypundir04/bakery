@@ -5,6 +5,7 @@ import com.hexad.bakery.exception.BakeryServiceException;
 import com.hexad.bakery.models.Invoice;
 import com.hexad.bakery.models.Order;
 import com.hexad.bakery.service.BakeryService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * @author Ajay Singh Pundir
  * This class acts a interface for processing the order
  */
+@Service
 public class BakeryServiceImpl implements BakeryService {
 
     private static BakeryServiceImpl instance = new BakeryServiceImpl();

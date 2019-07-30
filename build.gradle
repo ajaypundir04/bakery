@@ -1,8 +1,11 @@
 plugins {
+    id 'org.springframework.boot' version '2.1.6.RELEASE'
     id 'java'
 }
 
-group 'com.hexad'
+apply plugin: 'io.spring.dependency-management'
+
+group 'com.hexad.bakery'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
@@ -12,6 +15,7 @@ repositories {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.9.1'
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtime 'com.h2database:h2'
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
 }
