@@ -33,7 +33,7 @@ public class ApplicationLauncher {
         for (Product p : products) {
             inventoryService.addOrUpdateInventory(p, ApplicationConstant.DEFAULT_QUANTITY);
         }
-        ProductServiceImpl productServiceImpl = new ProductServiceImpl(inventoryService);
+        ProductServiceImpl productServiceImpl = new ProductServiceImpl();
         BakeryServiceImpl bakeryService = BakeryServiceImpl.getInstance();
         bakeryService.setInventoryService(inventoryService);
         bakeryService.setProductServiceImpl(productServiceImpl);

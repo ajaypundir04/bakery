@@ -1,8 +1,10 @@
 package com.hexad.bakery.service.impl;
 
 import com.hexad.bakery.models.Inventory;
+import com.hexad.bakery.models.Pack;
 import com.hexad.bakery.models.Product;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -10,12 +12,12 @@ import java.util.Map;
  * This class used for mainting the products with their availability.
  */
 public class InventoryService {
-
-
     private Inventory inventory;
+    private Map<String, Product> productMap;
 
     public InventoryService() {
         inventory = new Inventory();
+        productMap = new HashMap<>();
     }
 
     /**
@@ -23,11 +25,7 @@ public class InventoryService {
      * @return available quantity in @int
      */
     public int getAvailableQuantities(String code) {
-        for (Map.Entry<Product, Integer> entry : inventory.getInventoryMap().entrySet()) {
-            if (entry.getKey().getCode().equalsIgnoreCase(code))
-                return entry.getValue();
-        }
-        return 0;
+        return inventory.getInventoryMap().get(productMap.get(code));
     }
 
     /**
@@ -35,11 +33,7 @@ public class InventoryService {
      * @return @{@link Product} object is returned from the @productCodeAvailabilityMap
      */
     public Product getProductByCode(String code) {
-        for (Map.Entry<Product, Integer> entry : inventory.getInventoryMap().entrySet()) {
-            if (entry.getKey().getCode().equalsIgnoreCase(code))
-                return entry.getKey();
-        }
-        return null;
+        return productMap.get(code);
     }
 
     /**
@@ -52,6 +46,7 @@ public class InventoryService {
         } else {
             inventory.getInventoryMap().put(product, quantToModify);
         }
+        productMap.put(product.getCode(), product);
 
     }
 
@@ -63,4 +58,13 @@ public class InventoryService {
         return inventory.getInventoryMap().remove(product);
     }
 
+    /**
+     * @param productCode
+     * @param newPack     It is used to add new Pack for a particular product
+     */
+    public void registerNewPack(String productCode, Pack newPack) {
+        Product product = productMap.get(productCode);
+        product.getPacks().add(newPack);
+        addOrUpdateInventory(product, 0);
+    }
 }

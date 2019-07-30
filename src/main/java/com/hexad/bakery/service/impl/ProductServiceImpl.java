@@ -7,6 +7,7 @@ import com.hexad.bakery.service.ProductService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -15,31 +16,12 @@ import java.util.stream.Collectors;
  * It is used to perform Product related operations
  */
 public class ProductServiceImpl implements ProductService {
-
-    private InventoryService inventoryService;
-
-    public ProductServiceImpl(InventoryService inventoryService) {
-        this.inventoryService = inventoryService;
-    }
-
-    /**
-     * @param productCode
-     * @param newPack     It is used to add new Pack for a particular product
-     */
-    @Override
-    public void registerNewPack(String productCode, Pack newPack) {
-        Product product = inventoryService.getProductByCode(productCode);
-        product.getPacks().add(newPack);
-        inventoryService.addOrUpdateInventory(product, 0);
-    }
-
     /**
      * @param order It will accept the order
      * @return On the basis of Order it will return the minimum List @{@link Pack} of @{@link Product}
      */
     @Override
-    public List<Pack> decidePacksForOrder(Order order) {
-        Product product = inventoryService.getProductByCode(order.getCode());
+    public List<Pack> decidePacksForOrder(Order order, Product product) {
         return getProductPack(product.getPacks(), order.getQuantity());
     }
 

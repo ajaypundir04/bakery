@@ -36,7 +36,7 @@ public class BakeryServiceImpl implements BakeryService {
         for (Order order : orders) {
             int availableQuantity = inventoryService.getAvailableQuantities(order.getCode());
             if (order.getQuantity() <= availableQuantity) {
-                invoice.addEntry(order, productServiceImpl.decidePacksForOrder(order));
+                invoice.addEntry(order, productServiceImpl.decidePacksForOrder(order,inventoryService.getProductByCode(order.getCode())));
             } else {
                 throw new BakeryServiceException(ApplicationConstant.UNAVAILABLE_QUANTITY);
             }

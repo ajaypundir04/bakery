@@ -30,7 +30,7 @@ public class BakeryServiceTest {
         Product[] products = TestUtils.readJsonFile("test-data.json", Product[].class);
         Arrays.stream(products).forEach(p -> inventoryService.addOrUpdateInventory(p, 30));
 
-        ProductServiceImpl productServiceImpl = new ProductServiceImpl(inventoryService);
+        ProductServiceImpl productServiceImpl = new ProductServiceImpl();
         bakeryService.setInventoryService(inventoryService);
         bakeryService.setProductServiceImpl(productServiceImpl);
     }
