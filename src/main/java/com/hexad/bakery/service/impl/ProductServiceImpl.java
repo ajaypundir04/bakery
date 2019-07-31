@@ -7,7 +7,6 @@ import com.hexad.bakery.service.ProductService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,14 +30,14 @@ public class ProductServiceImpl implements ProductService {
         int quantity = requiredQuantity;
         List<Integer> quantityList = packs.stream().map(Pack::getQuantity).collect(Collectors.toList());
         for (int i = packs.size() - 1; i >= 0; i--) {
-            while (quantity >= packs.get(i).getQuantity()) {
+            if (quantity >= packs.get(i).getQuantity()) {
                 int remain = quantity - packs.get(i).getQuantity();
                 if (remain >= packs.get(i).getQuantity() || isPickAble(remain, quantityList)) {
                     quantity -= packs.get(i).getQuantity();
                     result.add(packs.get(i));
+                    i++;
                 } else {
                     quantityList.remove((Integer) packs.get(i).getQuantity());
-                    break;
                 }
             }
         }
@@ -50,7 +49,6 @@ public class ProductServiceImpl implements ProductService {
         return (quantityList
                 .stream()
                 .filter(i -> (remain % i == 0))
-                .collect(Collectors.toList())
-                .size() != 0);
+                .count()!=0);
     }
 }
