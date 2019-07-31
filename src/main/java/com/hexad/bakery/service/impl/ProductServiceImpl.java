@@ -36,14 +36,14 @@ public class ProductServiceImpl implements ProductService {
         int quantity = requiredQuantity;
         List<Integer> quantityList = packs.stream().map(Pack::getQuantity).collect(Collectors.toList());
         for (int i = packs.size() - 1; i >= 0; i--) {
-            while (quantity >= packs.get(i).getQuantity()) {
+            if (quantity >= packs.get(i).getQuantity()) {
                 int remain = quantity - packs.get(i).getQuantity();
                 if (remain >= packs.get(i).getQuantity() || isPickAble(remain, quantityList)) {
                     quantity -= packs.get(i).getQuantity();
                     result.add(packs.get(i));
+                    i++;
                 } else {
                     quantityList.remove((Integer) packs.get(i).getQuantity());
-                    break;
                 }
             }
         }
