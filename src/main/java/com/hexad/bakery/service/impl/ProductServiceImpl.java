@@ -48,7 +48,6 @@ public class ProductServiceImpl implements ProductService {
     private boolean isPickAble(int remain, List<Integer> quantityList) {
         return (quantityList
                 .stream()
-                .filter(i -> (remain % i == 0))
-                .count()!=0);
+                .anyMatch(i -> (remain % i == 0)));
     }
 }

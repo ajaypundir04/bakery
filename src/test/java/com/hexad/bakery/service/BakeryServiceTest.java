@@ -8,15 +8,16 @@ import com.hexad.bakery.models.Product;
 import com.hexad.bakery.service.impl.BakeryServiceImpl;
 import com.hexad.bakery.service.impl.InventoryService;
 import com.hexad.bakery.service.impl.ProductServiceImpl;
+import com.hexad.bakery.service.impl.ProductServiceImplTest;
 import com.hexad.bakery.utils.TestUtils;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+
 
 
 public class BakeryServiceTest {
@@ -41,23 +42,23 @@ public class BakeryServiceTest {
         Results[] results = TestUtils.readJsonFile("expected-results.json", Results[].class);
 
         Invoice invoice = bakeryService.processOrder(Arrays.asList(orders));
-        assertNotNull(invoice);
-        assertNotNull(invoice.allOrders());
-        assertEquals(results.length, invoice.allOrders().size());
+        Assert.assertNotNull(invoice);
+        Assert.assertNotNull(invoice.allOrders());
+        Assert.assertEquals(results.length, invoice.allOrders().size());
         for (Results result : results) {
             Order order = getOrderForCode(result.getCode(), invoice);
-            assertNotNull(order);
+            Assert.assertNotNull(order);
             Map<Pack, Integer> packs = invoice.getPacksForOrder(order);
-            assertEquals(result.getPacks().size(), packs.size());
+            Assert.assertEquals(result.getPacks().size(), packs.size());
             for (Results.ExpectedPack pack : result.getPacks()) {
                 Results.ExpectedPack actualResult = packs.entrySet().stream()
                         .filter(e -> e.getKey().getQuantity() == pack.getPack())
                         .map(e -> new Results.ExpectedPack(e.getKey().getQuantity(), e.getValue()))
                         .findFirst()
                         .orElse(null);
-                assertNotNull(actualResult);
-                assertEquals(pack.getPack(), actualResult.getPack());
-                assertEquals(pack.getCount(), actualResult.getCount());
+                Assert.assertNotNull(actualResult);
+                Assert.assertEquals(pack.getPack(), actualResult.getPack());
+                Assert.assertEquals(pack.getCount(), actualResult.getCount());
             }
         }
     }

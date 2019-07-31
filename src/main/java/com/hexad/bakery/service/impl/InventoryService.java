@@ -25,7 +25,7 @@ public class InventoryService {
      * @return available quantity in @int
      */
     public int getAvailableQuantities(String code) {
-        return inventory.getInventoryMap().get(productMap.get(code));
+        return inventory.getInventoryMap().getOrDefault(productMap.get(code),0);
     }
 
     /**
