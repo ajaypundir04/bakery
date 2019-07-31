@@ -1,16 +1,20 @@
 package com.hexad.bakery.service;
 
+import com.hexad.bakery.ApplicationLauncher;
 import com.hexad.bakery.dto.Results;
+import com.hexad.bakery.entities.Pack;
 import com.hexad.bakery.models.Invoice;
 import com.hexad.bakery.models.Order;
-import com.hexad.bakery.models.Pack;
-import com.hexad.bakery.models.Product;
 import com.hexad.bakery.service.impl.BakeryServiceImpl;
-import com.hexad.bakery.service.impl.InventoryService;
-import com.hexad.bakery.service.impl.ProductServiceImpl;
 import com.hexad.bakery.utils.TestUtils;
-import org.junit.Before;
+import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Profile;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -18,21 +22,17 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-
+@SpringBootTest(classes = ApplicationLauncher.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+@ActiveProfiles("test")
 public class BakeryServiceTest {
 
-    private BakeryServiceImpl bakeryService = BakeryServiceImpl.getInstance();
+    @Autowired
+    private BakeryServiceImpl bakeryService;
 
-    @Before
-    public void setup() throws Exception {
-        InventoryService inventoryService = new InventoryService();
-
-        Product[] products = TestUtils.readJsonFile("test-data.json", Product[].class);
-        Arrays.stream(products).forEach(p -> inventoryService.addOrUpdateInventory(p, 30));
-
-        ProductServiceImpl productServiceImpl = new ProductServiceImpl();
-        bakeryService.setInventoryService(inventoryService);
-        bakeryService.setProductServiceImpl(productServiceImpl);
+    @Test
+    public void canaryTest() {
+        Assert.assertNotNull(bakeryService);
     }
 
     @Test

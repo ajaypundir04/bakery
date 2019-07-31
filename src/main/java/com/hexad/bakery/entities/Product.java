@@ -1,13 +1,11 @@
 package com.hexad.bakery.entities;
 
-import com.hexad.bakery.models.Pack;
-
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Objects;
 import java.util.Set;
-import java.util.TreeSet;
 
 @Entity
 @Table(name = "PRODUCT")
@@ -16,7 +14,7 @@ public class Product extends AbstractEntity {
     private String name;
     private String code;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
     private Set<Pack> packs;
 
     public Product() {

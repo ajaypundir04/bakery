@@ -5,6 +5,7 @@ import com.hexad.bakery.exception.BakeryServiceException;
 import com.hexad.bakery.models.Invoice;
 import com.hexad.bakery.models.Order;
 import com.hexad.bakery.service.BakeryService;
+import com.hexad.bakery.service.ProductService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,16 +17,12 @@ import java.util.List;
 @Service
 public class BakeryServiceImpl implements BakeryService {
 
-    private static BakeryServiceImpl instance = new BakeryServiceImpl();
+    private ProductService productService;
+    private final InventoryService inventoryService;
 
-    private InventoryService inventoryService;
-    private ProductServiceImpl productServiceImpl;
-
-    private BakeryServiceImpl() {
-    }
-
-    public static BakeryServiceImpl getInstance() {
-        return instance;
+    private BakeryServiceImpl(ProductService productService, InventoryService inventoryService) {
+        this.productService = productService;
+        this.inventoryService = inventoryService;
     }
 
     /**
@@ -38,27 +35,11 @@ public class BakeryServiceImpl implements BakeryService {
         for (Order order : orders) {
             int availableQuantity = inventoryService.getAvailableQuantities(order.getCode());
             if (order.getQuantity() <= availableQuantity) {
-                invoice.addEntry(order, productServiceImpl.decidePacksForOrder(order,inventoryService.getProductByCode(order.getCode())));
+                invoice.addEntry(order, productService.decidePacksForOrder(order,inventoryService.getProductByCode(order.getCode())));
             } else {
                 throw new BakeryServiceException(ApplicationConstant.UNAVAILABLE_QUANTITY);
             }
         }
         return invoice;
-    }
-
-    public InventoryService getInventoryService() {
-        return inventoryService;
-    }
-
-    public void setInventoryService(InventoryService inventoryService) {
-        this.inventoryService = inventoryService;
-    }
-
-    public ProductServiceImpl getProductServiceImpl() {
-        return productServiceImpl;
-    }
-
-    public void setProductServiceImpl(ProductServiceImpl productServiceImpl) {
-        this.productServiceImpl = productServiceImpl;
     }
 }

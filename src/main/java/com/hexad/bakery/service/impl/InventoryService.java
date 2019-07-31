@@ -1,23 +1,26 @@
 package com.hexad.bakery.service.impl;
 
-import com.hexad.bakery.models.Inventory;
-import com.hexad.bakery.models.Pack;
-import com.hexad.bakery.models.Product;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.hexad.bakery.entities.Inventory;
+import com.hexad.bakery.entities.Product;
+import com.hexad.bakery.repositories.InventoryRepository;
+import com.hexad.bakery.repositories.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @author Ajay Singh Pundir
  * This class used for mainting the products with their availability.
  */
+@Service
 public class InventoryService {
-    private Inventory inventory;
-    private Map<String, Product> productMap;
 
-    public InventoryService() {
-        inventory = new Inventory();
-        productMap = new HashMap<>();
+    private final InventoryRepository inventoryRepository;
+    private final ProductRepository productRepository;
+
+    @Autowired
+    public InventoryService(InventoryRepository inventoryRepository, ProductRepository productRepository) {
+        this.inventoryRepository = inventoryRepository;
+        this.productRepository = productRepository;
     }
 
     /**
@@ -25,7 +28,7 @@ public class InventoryService {
      * @return available quantity in @int
      */
     public int getAvailableQuantities(String code) {
-        return inventory.getInventoryMap().get(productMap.get(code));
+        return inventoryRepository.findByProduct_code(code).getQuantity();
     }
 
     /**
@@ -33,7 +36,7 @@ public class InventoryService {
      * @return @{@link Product} object is returned from the @productCodeAvailabilityMap
      */
     public Product getProductByCode(String code) {
-        return productMap.get(code);
+        return productRepository.findByCode(code);
     }
 
     /**
@@ -41,30 +44,20 @@ public class InventoryService {
      * @param quantToModify quantity of products to be modified.It can be +ve for add and -ve for delete
      */
     public void addOrUpdateInventory(Product product, int quantToModify) {// inventory =new Inventory();
-        if (inventory.getInventoryMap().containsKey(product)) {
-            inventory.getInventoryMap().put(product, inventory.getInventoryMap().get(product) + quantToModify);
-        } else {
-            inventory.getInventoryMap().put(product, quantToModify);
+        Inventory inventory = inventoryRepository.findByProduct_code(product.getCode());
+        if(inventory == null) {
+            inventory = new Inventory();
+            inventory.setQuantity(0);
         }
-        productMap.put(product.getCode(), product);
-
+        inventory.setProduct(product);
+        inventory.setQuantity(inventory.getQuantity() + quantToModify);
+        inventoryRepository.save(inventory);
     }
 
     /**
      * @param product is passed to remove it from inventory
-     * @return no of items removed
      */
-    public int removeProductFromInventory(Product product) {
-        return inventory.getInventoryMap().remove(product);
-    }
-
-    /**
-     * @param productCode
-     * @param newPack     It is used to add new Pack for a particular product
-     */
-    public void registerNewPack(String productCode, Pack newPack) {
-        Product product = productMap.get(productCode);
-        product.getPacks().add(newPack);
-        addOrUpdateInventory(product, 0);
+    public void removeProductFromInventory(Product product) {
+        inventoryRepository.deleteByProduct(product);
     }
 }

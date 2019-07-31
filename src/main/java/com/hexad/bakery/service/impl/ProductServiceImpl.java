@@ -1,13 +1,13 @@
 package com.hexad.bakery.service.impl;
 
+import com.hexad.bakery.entities.Pack;
+import com.hexad.bakery.entities.Product;
 import com.hexad.bakery.models.Order;
-import com.hexad.bakery.models.Pack;
-import com.hexad.bakery.models.Product;
 import com.hexad.bakery.service.ProductService;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -15,7 +15,12 @@ import java.util.stream.Collectors;
  * @author Ajay Singh Pundir
  * It is used to perform Product related operations
  */
+@Service
 public class ProductServiceImpl implements ProductService {
+
+    public ProductServiceImpl() {
+    }
+
     /**
      * @param order It will accept the order
      * @return On the basis of Order it will return the minimum List @{@link Pack} of @{@link Product}
@@ -26,7 +31,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private List<Pack> getProductPack(Set<Pack> availablePacks, int requiredQuantity) {
-        List<Pack> packs = new ArrayList<>(availablePacks);
+        List<Pack> packs = availablePacks.stream().sorted().collect(Collectors.toList());
         List<Pack> result = new ArrayList<>();
         int quantity = requiredQuantity;
         List<Integer> quantityList = packs.stream().map(Pack::getQuantity).collect(Collectors.toList());
@@ -47,10 +52,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private boolean isPickAble(int remain, List<Integer> quantityList) {
-        return (quantityList
+        return quantityList
                 .stream()
-                .filter(i -> (remain % i == 0))
-                .collect(Collectors.toList())
-                .size() != 0);
+                .anyMatch(i -> (remain % i == 0));
     }
 }

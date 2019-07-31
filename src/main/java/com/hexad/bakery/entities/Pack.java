@@ -1,6 +1,7 @@
 package com.hexad.bakery.entities;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.Objects;
 
@@ -11,6 +12,7 @@ public class Pack extends AbstractEntity implements Comparable<Pack> {
     private int quantity;
     private float price;
 
+    @ManyToOne
     private Product product;
 
     public Pack() {
